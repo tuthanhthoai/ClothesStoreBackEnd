@@ -35,24 +35,25 @@ const createUser = (newUser) => {
     })
 }
 
-const login = (userLogin) => {
+const loginUser = (userLogin) => {
     return new Promise(async (resolve, reject) => {
-        const { name, email, password, confirmPassword, phone } = userLogin
+        const { email, password } = userLogin
         try {
             const checkUser = await User.findOne({
                 email: email
             })
             if (checkUser === null) {
                 resolve({
-                    status: 'OK',
-                    message: 'The user not existed!'
+                    status: 'ERR',
+                    message: 'The user is not defined'
                 })
             }
             const comparePassword = bcrypt.compareSync(password, checkUser.password)
+
             if (!comparePassword) {
                 resolve({
-                    status: 'OK',
-                    message: 'The password or user is incorrect!'
+                    status: 'ERR',
+                    message: 'The password or user is incorrect'
                 })
             }
             const access_token = await generalAccessToken({
@@ -65,10 +66,9 @@ const login = (userLogin) => {
                 isAdmin: checkUser.isAdmin
             })
 
-            console.log('access_token', access_token)
             resolve({
                 status: 'OK',
-                message: 'Login successfully!',
+                message: 'SUCCESS',
                 access_token,
                 refresh_token
             })
@@ -78,7 +78,116 @@ const login = (userLogin) => {
     })
 }
 
+const updateUser = (id, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({
+                _id: id
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+
+            const updatedUser = await User.findByIdAndUpdate(id, data, { new: true })
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: updatedUser
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+const deleteUser = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({
+                _id: id
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+
+            await User.findByIdAndDelete(id)
+            resolve({
+                status: 'OK',
+                message: 'Delete user success',
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+const getAllUser = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const allUser = await User.find().sort({createdAt: -1, updatedAt: -1})
+            resolve({
+                status: 'OK',
+                message: 'Success',
+                data: allUser
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+const getDetailsUser = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const user = await User.findOne({
+                _id: id
+            })
+            if (user === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            resolve({
+                status: 'OK',
+                message: 'SUCESS',
+                data: user
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+const deleteManyUser = (ids) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            await User.deleteMany({ _id: ids })
+            resolve({
+                status: 'OK',
+                message: 'Delete user success',
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
+
 module.exports = {
     createUser,
-    login
+    loginUser,
+    updateUser,
+    deleteUser,
+    getAllUser,
+    getDetailsUser,
+    deleteManyUser
 }
