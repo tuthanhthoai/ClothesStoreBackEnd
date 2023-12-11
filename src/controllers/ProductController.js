@@ -6,7 +6,7 @@ const createProduct = async (req, res) => {
         if (!name || !image || !type || !countInStock || !price || !rating || !discount) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The input is required'
+                message: 'The input is required!'
             })
         }
         const response = await ProductService.createProduct(req.body)
@@ -25,7 +25,7 @@ const updateProduct = async (req, res) => {
         if (!productId) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The productId is required'
+                message: 'The productId is required!'
             })
         }
         const response = await ProductService.updateProduct(productId, data)
@@ -43,7 +43,7 @@ const getDetailsProduct = async (req, res) => {
         if (!productId) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The productId is required'
+                message: 'The productId is required!'
             })
         }
         const response = await ProductService.getDetailsProduct(productId)
@@ -61,7 +61,7 @@ const deleteProduct = async (req, res) => {
         if (!productId) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The productId is required'
+                message: 'The productId is required!'
             })
         }
         const response = await ProductService.deleteProduct(productId)
@@ -79,7 +79,7 @@ const deleteMany = async (req, res) => {
         if (!ids) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The ids is required'
+                message: 'The ids is required!'
             })
         }
         const response = await ProductService.deleteManyProduct(ids)

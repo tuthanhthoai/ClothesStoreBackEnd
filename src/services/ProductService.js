@@ -2,7 +2,7 @@ const Product = require("../models/ProductModel")
 
 const createProduct = (newProduct) => {
     return new Promise(async (resolve, reject) => {
-        const { name, image, type, countInStock, price, rating, description,discount } = newProduct
+        const { name, image, type, countInStock, price, rating, description, discount } = newProduct
         try {
             const checkProduct = await Product.findOne({
                 name: name
@@ -10,7 +10,7 @@ const createProduct = (newProduct) => {
             if (checkProduct !== null) {
                 resolve({
                     status: 'ERR',
-                    message: 'The name of product is already'
+                    message: 'The name of product is existed!'
                 })
             }
             const newProduct = await Product.create({
@@ -45,7 +45,7 @@ const updateProduct = (id, data) => {
             if (checkProduct === null) {
                 resolve({
                     status: 'ERR',
-                    message: 'The product is not defined'
+                    message: 'The product is not defined!'
                 })
             }
 
@@ -70,14 +70,14 @@ const deleteProduct = (id) => {
             if (checkProduct === null) {
                 resolve({
                     status: 'ERR',
-                    message: 'The product is not defined'
+                    message: 'The product is not defined!'
                 })
             }
 
             await Product.findByIdAndDelete(id)
             resolve({
                 status: 'OK',
-                message: 'Delete product success',
+                message: 'Delete product successfully!',
             })
         } catch (e) {
             reject(e)
@@ -91,7 +91,7 @@ const deleteManyProduct = (ids) => {
             await Product.deleteMany({ _id: ids })
             resolve({
                 status: 'OK',
-                message: 'Delete product success',
+                message: 'Delete product successfully!',
             })
         } catch (e) {
             reject(e)
@@ -108,13 +108,13 @@ const getDetailsProduct = (id) => {
             if (product === null) {
                 resolve({
                     status: 'ERR',
-                    message: 'The product is not defined'
+                    message: 'The product is not defined!'
                 })
             }
 
             resolve({
                 status: 'OK',
-                message: 'SUCESS',
+                message: 'SUCCESS',
                 data: product
             })
         } catch (e) {
