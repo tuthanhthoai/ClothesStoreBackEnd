@@ -2,7 +2,7 @@ const Product = require("../models/ProductModel")
 
 const createProduct = (newProduct) => {
     return new Promise(async (resolve, reject) => {
-        const { name, image, type, countInStock, price, rating, description, discount } = newProduct
+        const { name, image, type, countInStock, price, rating, description,discount } = newProduct
         try {
             const checkProduct = await Product.findOne({
                 name: name
@@ -85,6 +85,19 @@ const deleteProduct = (id) => {
     })
 }
 
+const deleteManyProduct = (ids) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await Product.deleteMany({ _id: ids })
+            resolve({
+                status: 'OK',
+                message: 'Delete product success',
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
 const getDetailsProduct = (id) => {
     return new Promise(async (resolve, reject) => {
@@ -113,7 +126,9 @@ const getDetailsProduct = (id) => {
 const getAllProduct = (limit, page, sort, filter) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const totalProduct = await Product.count()
+            const totalProduct = await Product.countDocuments().catch(error => {
+                throw new Error(`Error counting products: ${error.message}`);
+            });
             let allProduct = []
             if (filter) {
                 const label = filter[0];
@@ -159,6 +174,20 @@ const getAllProduct = (limit, page, sort, filter) => {
     })
 }
 
+const getAllType = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const allType = await Product.distinct('type')
+            resolve({
+                status: 'OK',
+                message: 'Success',
+                data: allType,
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
 module.exports = {
     createProduct,
