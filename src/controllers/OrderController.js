@@ -6,7 +6,7 @@ const createOrder = async (req, res) => {
         if (!paymentMethod || !itemsPrice || !shippingPrice || !totalPrice || !fullName || !address || !city || !phone) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The input is required'
+                message: 'The input is required!'
             })
         }
         const response = await OrderService.createOrder(req.body)
@@ -24,7 +24,7 @@ const getAllOrderDetails = async (req, res) => {
         if (!userId) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The userId is required'
+                message: 'The userId is required!'
             })
         }
         const response = await OrderService.getAllOrderDetails(userId)
@@ -43,7 +43,7 @@ const getDetailsOrder = async (req, res) => {
         if (!orderId) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The userId is required'
+                message: 'The userId is required!'
             })
         }
         const response = await OrderService.getOrderDetails(orderId)
@@ -63,7 +63,7 @@ const cancelOrderDetails = async (req, res) => {
         if (!orderId) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The orderId is required'
+                message: 'The orderId is required!'
             })
         }
         const response = await OrderService.cancelOrderDetails(orderId, data)
