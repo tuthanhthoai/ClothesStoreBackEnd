@@ -190,10 +190,37 @@ const getAllOrder = () => {
   });
 };
 
+const updateStatus = (id, status) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const order = await Order.findOne({
+        _id: id,
+      });
+      if (order === null) {
+        resolve({
+          status: "ERR",
+          message: "The product is not defined!",
+        });
+      }
+      order.status = status
+      const updatedOrder = await Order.findByIdAndUpdate(id, order, { new: true });
+      resolve({
+        status: "OK",
+        message: "success",
+        data: updatedOrder,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+
 module.exports = {
   createOrder,
   getAllOrderDetails,
   getOrderDetails,
   cancelOrderDetails,
   getAllOrder,
+  updateStatus
 };

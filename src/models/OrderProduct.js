@@ -23,7 +23,8 @@ const orderSchema = new mongoose.Schema({
     itemsPrice: { type: Number, required: true },
     totalPrice: { type: Number, required: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    isDelivered: { type: Boolean, default: false },
+    status: {type:String, enum: ['Chưa xác nhận', 'Đã xác nhận', 'Đang giao', "Đã giao", "Hủy"], default:'Chưa xác nhận'},
+    note: { type: String },
     deliveredAt: { type: Date },
 },
     {
