@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv')
 const { default: mongoose } = require('mongoose');
+const cors = require("cors");
 const routes = require('./routes');
 const bodyParser = require('body-parser');
 dotenv.config()
@@ -8,11 +9,15 @@ dotenv.config()
 const app = express();
 const port = process.env.PORT || 3001;
 
-app.get('/', (req, res) => {
-    res.send('Hello world,  a aaaa')
-})
-
+const corsOptions = {
+    origin: "http://localhost:3000",
+    methods: ["POST", "PUT", "GET", "DELETE", "OPTIONS", "HEAD"],
+    credentials: true,
+  };
+  
+app.use(cors(corsOptions));
 app.use(bodyParser.json())
+// app.use(cookieParser());
 
 routes(app);
 
