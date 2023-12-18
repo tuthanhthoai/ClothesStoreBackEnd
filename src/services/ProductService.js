@@ -1,8 +1,9 @@
 const Product = require("../models/ProductModel")
+const Category = require("../models/Category")
 
 const createProduct = (newProduct) => {
     return new Promise(async (resolve, reject) => {
-        const { name, image, type, countInStock, price, description, discount } = newProduct
+        const { name, image, category, countInStock, price, description, discount } = newProduct
         try {
             const checkProduct = await Product.findOne({
                 name: name
@@ -16,7 +17,7 @@ const createProduct = (newProduct) => {
             const newProduct = await Product.create({
                 name, 
                 image, 
-                type, 
+                category: category, 
                 countInStock: Number(countInStock), 
                 price, 
                 description,
@@ -105,7 +106,7 @@ const getDetailsProduct = (id) => {
         try {
             const product = await Product.findOne({
                 _id: id
-            })
+            }).populate('category')
             if (product === null) {
                 resolve({
                     status: 'ERR',
@@ -133,7 +134,19 @@ const getAllProduct = (limit, page, sort, filter) => {
             let allProduct = []
             if (filter) {
                 const label = filter[0];
-                const allObjectFilter = await Product.find({ [label]: { '$regex': filter[1] } }).limit(limit).skip(page * limit).sort({createdAt: -1, updatedAt: -1})
+                if(label ==="type" || label === "category"){
+                    const category = await Category.findOne({ slug: filter[1] });
+                    const allObjectFilter = await Product.find({category: category._id}).limit(limit).skip(page * limit).sort({createdAt: -1, updatedAt: -1}).populate('category')
+                    resolve({
+                        status: 'OK',
+                        message: 'Success',
+                        data: allObjectFilter,
+                        total: totalProduct,
+                        pageCurrent: Number(page + 1),
+                        totalPage: Math.ceil(totalProduct / limit)
+                    })
+                }
+                const allObjectFilter = await Product.find({ [label]: { '$regex': filter[1] } }).limit(limit).skip(page * limit).sort({createdAt: -1, updatedAt: -1}).populate('category')
                 resolve({
                     status: 'OK',
                     message: 'Success',
@@ -146,7 +159,7 @@ const getAllProduct = (limit, page, sort, filter) => {
             if (sort) {
                 const objectSort = {}
                 objectSort[sort[1]] = sort[0]
-                const allProductSort = await Product.find().limit(limit).skip(page * limit).sort(objectSort).sort({createdAt: -1, updatedAt: -1})
+                const allProductSort = await Product.find().limit(limit).skip(page * limit).sort(objectSort).sort({createdAt: -1, updatedAt: -1}).populate('category')
                 resolve({
                     status: 'OK',
                     message: 'Success',
@@ -157,9 +170,9 @@ const getAllProduct = (limit, page, sort, filter) => {
                 })
             }
             if(!limit) {
-                allProduct = await Product.find().sort({createdAt: -1, updatedAt: -1})
+                allProduct = await Product.find().sort({createdAt: -1, updatedAt: -1}).populate('category')
             }else {
-                allProduct = await Product.find().limit(limit).skip(page * limit).sort({createdAt: -1, updatedAt: -1})
+                allProduct = await Product.find().limit(limit).skip(page * limit).sort({createdAt: -1, updatedAt: -1}).populate('category')
             }
             resolve({
                 status: 'OK',
