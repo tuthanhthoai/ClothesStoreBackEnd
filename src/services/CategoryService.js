@@ -102,4 +102,19 @@ const getDetailCategory = (categoryId) => {
   });
 };
 
-module.exports = { createCategory, updateCategory, deleteCategory, getAllCategory, getDetailCategory };
+
+const deleteManyCategory = (ids) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          await Category.deleteMany({ _id: ids })
+          resolve({
+              status: 'OK',
+              message: 'Delete category successfully!',
+          })
+      } catch (e) {
+          reject(e)
+      }
+  })
+}
+
+module.exports = { createCategory, updateCategory, deleteCategory, getAllCategory, getDetailCategory, deleteManyCategory };

@@ -81,4 +81,23 @@ const getCategoryDetail = async (req, res) => {
     });
   }
 };
-module.exports = { createCategory, updateCategory, deleteCategory, getAllCategory, getCategoryDetail };
+
+const deleteMany = async (req, res) => {
+  try {
+      const ids = req.body.ids
+      if (!ids) {
+          return res.status(200).json({
+              status: 'ERR',
+              message: 'The ids is required!'
+          })
+      }
+      const response = await CategoryService.deleteManyCategory(ids)
+      return res.status(200).json(response)
+  } catch (e) {
+      return res.status(404).json({
+          message: e
+      })
+  }
+}
+
+module.exports = { createCategory, updateCategory, deleteCategory, getAllCategory, getCategoryDetail, deleteMany };
